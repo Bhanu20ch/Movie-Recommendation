@@ -1,11 +1,60 @@
+import { useEffect, useState } from "react";
+
+import MovieCard from "../components/MovieCard";
+
 import Navbar from "../components/Navbar";
 
+import { getMovies } from "../services/movieService";
+
 function Home() {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const data = await getMovies();
+
+        setMovies(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
   return (
     <div>
       <Navbar />
 
-      <h1 style={{ padding: "20px" }}>Home Page</h1>
+      <div
+        style={{
+          padding: "20px",
+          backgroundColor: "#121212",
+          minHeight: "100vh",
+        }}
+      >
+        <h1
+          style={{
+            color: "white",
+            marginBottom: "20px",
+          }}
+        >
+          Movies
+        </h1>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "20px",
+          }}
+        >
+          {movies.map((movie) => (
+            <MovieCard key={movie._id} movie={movie} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
