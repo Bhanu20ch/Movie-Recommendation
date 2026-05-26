@@ -9,29 +9,35 @@ const movieSchema = new mongoose.Schema(
 
     description: {
       type: String,
+      required: true,
     },
 
     poster: {
       type: String,
+      required: true,
     },
 
     genres: [
       {
         type: String,
+        required: true,
       },
     ],
 
     language: {
       type: String,
+      required: true,
     },
 
     director: {
       type: String,
+      required: true,
     },
 
     cast: [
       {
         type: String,
+        required: true,
       },
     ],
 

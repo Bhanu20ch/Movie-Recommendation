@@ -1,6 +1,15 @@
+import { useNavigate } from "react-router-dom";
+
 function MovieCard({ movie }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/movie/${movie._id}`);
+  };
+
   return (
     <div
+      onClick={handleClick}
       style={{
         backgroundColor: "#1e1e1e",
         color: "white",
@@ -8,6 +17,8 @@ function MovieCard({ movie }) {
         borderRadius: "12px",
         marginTop: "20px",
         boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+        cursor: "pointer",
+        transition: "0.3s",
       }}
     >
       <h2 style={{ marginBottom: "10px" }}>{movie.title}</h2>
