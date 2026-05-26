@@ -43,13 +43,25 @@ const getMovieById = async (req, res) => {
 const searchMovies = async (req, res) => {
   try {
     const query = req.query.q;
+    const synonymMap = {
+      science: "Sci-Fi",
+      sci: "Sci-Fi",
+      funny: "Comedy",
+      humor: "Comedy",
+      romantic: "Romance",
+      romance: "Romance",
+      actionful: "Action",
+      space: "Sci-Fi",
+    };
+
+    const searchTerm = synonymMap[query.toLowerCase()] || query;
 
     const movies = await Movie.find({
       $or: [
-        { title: { $regex: query, $options: "i" } },
-        { genres: { $regex: query, $options: "i" } },
-        { language: { $regex: query, $options: "i" } },
-        { director: { $regex: query, $options: "i" } },
+        { title: { $regex: searchTerm, $options: "i" } },
+        { genres: { $regex: searchTerm, $options: "i" } },
+        { language: { $regex: searchTerm, $options: "i" } },
+        { director: { $regex: searchTerm, $options: "i" } },
       ],
     });
 
