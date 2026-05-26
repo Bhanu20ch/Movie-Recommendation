@@ -1,3 +1,11 @@
+import {
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/clerk-react";
+
 function Navbar({ searchQuery, setSearchQuery, handleSearch }) {
   return (
     <nav
@@ -44,6 +52,24 @@ function Navbar({ searchQuery, setSearchQuery, handleSearch }) {
         >
           Search
         </button>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          alignItems: "center",
+        }}
+      >
+        <SignedOut>
+          <SignInButton />
+
+          <SignUpButton />
+        </SignedOut>
+
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </div>
     </nav>
   );
