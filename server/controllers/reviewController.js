@@ -1,8 +1,37 @@
 const Review = require("../models/Review");
 
+const Movie = require("../models/Movie");
+const UserMovieStatus = require("../models/UserMovieStatus");
 const addReview = async (req, res) => {
   try {
     const review = await Review.create(req.body);
+    await UserMovieStatus.findOneAndUpdate(
+      {
+        userId: req.body.userId,
+        movieId: req.body.movie,
+      },
+      {
+        status: "watched",
+      },
+      {
+        upsert: true,
+        new: true,
+      },
+    );
+    const reviews = await Review.find({
+      movie: req.body.movie,
+    });
+
+    const totalRatings = reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0,
+    );
+
+    const averageRating = totalRatings / reviews.length;
+
+    await Movie.findByIdAndUpdate(req.body.movie, {
+      averageRating,
+    });
 
     res.status(201).json(review);
   } catch (error) {

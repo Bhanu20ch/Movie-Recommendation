@@ -8,6 +8,11 @@ const reviewSchema = new mongoose.Schema(
       required: true,
     },
 
+    userId: {
+      type: String,
+      required: true,
+    },
+
     username: {
       type: String,
       required: true,

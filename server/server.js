@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const movieRoutes = require("./routes/movieRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const userRoutes = require("./routes/userRoutes");
+const userMovieStatusRoutes = require("./routes/userMovieStatusRoutes");
 dotenv.config();
 
 connectDB();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/movies", movieRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/status", userMovieStatusRoutes);
 app.get("/", (req, res) => {
   res.send("API Running...");
 });
