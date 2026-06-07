@@ -49,7 +49,21 @@ const getMovieStatus = async (req, res) => {
     });
   }
 };
+const getUserStatuses = async (req, res) => {
+  try {
+    const statuses = await UserMovieStatus.find({
+      userId: req.params.userId,
+    });
+
+    res.status(200).json(statuses);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   updateMovieStatus,
   getMovieStatus,
+  getUserStatuses,
 };

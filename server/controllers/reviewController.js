@@ -4,7 +4,19 @@ const Movie = require("../models/Movie");
 const UserMovieStatus = require("../models/UserMovieStatus");
 const addReview = async (req, res) => {
   try {
-    const review = await Review.create(req.body);
+    let review = await Review.findOne({
+      userId: req.body.userId,
+      movie: req.body.movie,
+    });
+
+    if (review) {
+      review.rating = req.body.rating;
+      review.comment = req.body.comment;
+
+      await review.save();
+    } else {
+      review = await Review.create(req.body);
+    }
     await UserMovieStatus.findOneAndUpdate(
       {
         userId: req.body.userId,

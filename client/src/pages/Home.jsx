@@ -8,20 +8,38 @@ import Navbar from "../components/Navbar";
 
 import { getMovies } from "../services/movieService";
 
+import { useUser } from "@clerk/clerk-react";
+
 function Home() {
   const [movies, setMovies] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusMap, setStatusMap] = useState({});
+  const { user } = useUser();
 
   useEffect(() => {
     fetchMovies();
-  }, []);
+  }, [user]);
 
   const fetchMovies = async () => {
     try {
       const data = await getMovies();
 
       setMovies(data);
+
+      if (user) {
+        const statusResponse = await axios.get(
+          `http://localhost:5000/api/status/user/${user.id}`,
+        );
+
+        const map = {};
+
+        statusResponse.data.forEach((item) => {
+          map[item.movieId] = item.status;
+        });
+
+        setStatusMap(map);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -77,7 +95,11 @@ function Home() {
           }}
         >
           {movies.map((movie) => (
-            <MovieCard key={movie._id} movie={movie} />
+            <MovieCard
+              key={movie._id}
+              movie={movie}
+              status={statusMap[movie._id]}
+            />
           ))}
         </div>
       </div>
