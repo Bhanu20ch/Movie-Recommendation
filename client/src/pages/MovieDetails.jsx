@@ -8,7 +8,7 @@ import { useUser } from "@clerk/clerk-react";
 function MovieDetails() {
   const { id } = useParams();
   const { user } = useUser();
-
+  const [message, setMessage] = useState("");
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState("");
@@ -54,7 +54,11 @@ function MovieDetails() {
     console.log("Submit button clicked");
 
     if (!user) {
-      alert("Please login first");
+      setMessage("⚠️ Please login first");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
       return;
     }
 
@@ -80,7 +84,11 @@ function MovieDetails() {
 
       console.log(response.data);
 
-      alert("Review Saved Successfully");
+      setMessage("✅ Review Saved Successfully");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
 
       setRating("");
       setComment("");
@@ -93,12 +101,20 @@ function MovieDetails() {
         console.log(error.response.data);
       }
 
-      alert("Review Failed");
+      setMessage("❌ Review Failed");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
     }
   };
   const updateStatus = async (status) => {
     if (!user) {
-      alert("Please login first");
+      setMessage("⚠️ Please login first");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
       return;
     }
 
@@ -111,7 +127,10 @@ function MovieDetails() {
 
       setMovieStatus(status);
 
-      alert(`Movie marked as ${status}`);
+      setMessage(`✅ Movie marked as ${status}`);
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +141,7 @@ function MovieDetails() {
       <h1
         style={{
           color: "white",
-          backgroundColor: "#121212",
+          background: "linear-gradient(to bottom, #0f0f0f, #1a1a1a)",
           minHeight: "100vh",
           padding: "40px",
         }}
@@ -135,26 +154,57 @@ function MovieDetails() {
   return (
     <div
       style={{
-        backgroundColor: "#121212",
+        background: "linear-gradient(to bottom, #0f0f0f, #1a1a1a)",
         minHeight: "100vh",
         color: "white",
         padding: "40px",
       }}
     >
+      {message && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            zIndex: 1000,
+            backgroundColor:
+              message.includes("Failed") || message.includes("login")
+                ? "#e74c3c"
+                : "#2ecc71",
+            color: "white",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            fontWeight: "bold",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
+          }}
+        >
+          {message}
+        </div>
+      )}
       <img
         src={movie.poster}
         alt={movie.title}
         style={{
-          width: "300px",
+          width: "350px",
+          boxShadow: "0 0 25px rgba(245,197,24,0.3)",
           borderRadius: "12px",
           marginBottom: "20px",
         }}
       />
 
-      <h1>{movie.title}</h1>
+      <h1
+        style={{
+          color: "#f5c518",
+          marginBottom: "10px",
+        }}
+      >
+        {movie.title}
+      </h1>
       <div
         style={{
-          backgroundColor: "#1e1e1e",
+          backgroundColor: "#232323",
+          border: "1px solid #f5c518",
+          boxShadow: "0 0 15px rgba(245,197,24,0.2)",
           padding: "15px",
           borderRadius: "10px",
           marginTop: "15px",
@@ -204,10 +254,12 @@ function MovieDetails() {
           onClick={() => updateStatus("watched")}
           style={{
             backgroundColor: movieStatus === "watched" ? "#2ecc71" : "#555",
+            boxShadow: movieStatus === "watched" ? "0 0 15px #2ecc71" : "none",
             padding: "10px 20px",
             borderRadius: "8px",
             cursor: "pointer",
             color: "white",
+            transition: "0.3s",
           }}
         >
           ✅ Watched
@@ -217,10 +269,12 @@ function MovieDetails() {
           onClick={() => updateStatus("favorite")}
           style={{
             backgroundColor: movieStatus === "favorite" ? "#e74c3c" : "#555",
+            boxShadow: movieStatus === "favorite" ? "0 0 15px #e74c3c" : "none",
             padding: "10px 20px",
             borderRadius: "8px",
             cursor: "pointer",
             color: "white",
+            transition: "0.3s",
           }}
         >
           ❤️ Favorite
@@ -230,10 +284,13 @@ function MovieDetails() {
           onClick={() => updateStatus("watch_later")}
           style={{
             backgroundColor: movieStatus === "watch_later" ? "#3498db" : "#555",
+            boxShadow:
+              movieStatus === "watch_later" ? "0 0 15px #3498db" : "none",
             padding: "10px 20px",
             borderRadius: "8px",
             cursor: "pointer",
             color: "white",
+            transition: "0.3s",
           }}
         >
           📌 Watch Later
@@ -243,12 +300,14 @@ function MovieDetails() {
         style={{
           marginTop: "30px",
           marginBottom: "30px",
-          backgroundColor: "#1e1e1e",
+          backgroundColor: "#232323",
+          border: "1px solid #333",
+          boxShadow: "0 0 15px rgba(245,197,24,0.1)",
           padding: "20px",
           borderRadius: "10px",
         }}
       >
-        <h2>Add Review</h2>
+        <h2 style={{ color: "#f5c518" }}>Add Review</h2>
 
         <input
           type="number"
@@ -288,8 +347,9 @@ function MovieDetails() {
           style={{
             marginTop: "15px",
             padding: "10px 20px",
-            backgroundColor: "white",
-            color: "black",
+            backgroundColor: "#f5c518",
+            color: "#121212",
+            fontWeight: "bold",
             width: "180px",
             textAlign: "center",
             borderRadius: "5px",
@@ -299,7 +359,7 @@ function MovieDetails() {
           Submit Review
         </div>
       </div>
-      <h2>Reviews</h2>
+      <h2 style={{ color: "#f5c518" }}>Reviews</h2>
       <div style={{ marginTop: "20px" }}>
         {reviews.length === 0 ? (
           <p>No reviews yet.</p>
@@ -308,15 +368,24 @@ function MovieDetails() {
             <div
               key={review._id}
               style={{
-                backgroundColor: "#1e1e1e",
+                backgroundColor: "#232323",
+                border: "1px solid #333",
+                boxShadow: "0 0 10px rgba(0,0,0,0.2)",
                 padding: "15px",
                 borderRadius: "10px",
                 marginBottom: "15px",
               }}
             >
-              <h3>{review.username}</h3>
+              <h3 style={{ color: "#f5c518" }}>👤 {review.username}</h3>
 
-              <p>⭐ {review.rating}/5</p>
+              <p
+                style={{
+                  color: "#f5c518",
+                  fontWeight: "bold",
+                }}
+              >
+                ⭐ {review.rating}/5
+              </p>
 
               <p>{review.comment}</p>
             </div>

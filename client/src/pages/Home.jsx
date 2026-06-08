@@ -80,7 +80,7 @@ function Home() {
       >
         <h1
           style={{
-            color: "white",
+            color: "#f5c518",
             marginBottom: "20px",
           }}
         >

@@ -6,7 +6,6 @@ function MovieCard({ movie, status }) {
   const handleClick = () => {
     navigate(`/movie/${movie._id}`);
   };
-
   const borderColor =
     status === "watched"
       ? "#2ecc71"
@@ -21,9 +20,11 @@ function MovieCard({ movie, status }) {
       onClick={handleClick}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "scale(1.03)";
+        e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.5)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "scale(1)";
+        e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
       }}
       style={{
         backgroundColor: "#1e1e1e",
@@ -33,7 +34,7 @@ function MovieCard({ movie, status }) {
         marginTop: "20px",
         boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
         cursor: "pointer",
-        transition: "transfrom 0.3s ease",
+        transition: "transform 0.3s ease",
         transform: "scale(1)",
         border: `3px solid ${borderColor}`,
       }}
@@ -107,10 +108,16 @@ function MovieCard({ movie, status }) {
       >
         ⭐ {movie.averageRating?.toFixed(1) || "0.0"}
       </p>
-      <p style={{ marginBottom: "10px" }}>
-        {movie.description.length > 120
-          ? movie.description.substring(0, 120) + "..."
-          : movie.description}
+      <p
+        style={{
+          marginBottom: "10px",
+          overflow: "hidden",
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+        }}
+      >
+        {movie.description}
       </p>
 
       <p>
