@@ -19,6 +19,12 @@ function MovieCard({ movie, status }) {
   return (
     <div
       onClick={handleClick}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "scale(1.03)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "scale(1)";
+      }}
       style={{
         backgroundColor: "#1e1e1e",
         color: "white",
@@ -27,49 +33,85 @@ function MovieCard({ movie, status }) {
         marginTop: "20px",
         boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
         cursor: "pointer",
-        transition: "0.3s",
+        transition: "transfrom 0.3s ease",
+        transform: "scale(1)",
         border: `3px solid ${borderColor}`,
       }}
     >
+      <img
+        src={movie.poster}
+        alt={movie.title}
+        style={{
+          width: "100%",
+          height: "350px",
+          objectFit: "cover",
+          borderRadius: "10px",
+          marginBottom: "15px",
+        }}
+      />
       {status === "watched" && (
-        <p
+        <span
           style={{
-            color: "#2ecc71",
+            backgroundColor: "#2ecc71",
+            padding: "5px 10px",
+            borderRadius: "20px",
+            fontSize: "14px",
             fontWeight: "bold",
+            display: "inline-block",
             marginBottom: "10px",
           }}
         >
           ✅ Watched
-        </p>
+        </span>
       )}
 
       {status === "favorite" && (
-        <p
+        <span
           style={{
-            color: "#e74c3c",
+            backgroundColor: "#e74c3c",
+            padding: "5px 10px",
+            borderRadius: "20px",
+            fontSize: "14px",
             fontWeight: "bold",
+            display: "inline-block",
             marginBottom: "10px",
           }}
         >
           ❤️ Favorite
-        </p>
+        </span>
       )}
 
       {status === "watch_later" && (
-        <p
+        <span
           style={{
-            color: "#3498db",
+            backgroundColor: "#3498db",
+            padding: "5px 10px",
+            borderRadius: "20px",
+            fontSize: "14px",
             fontWeight: "bold",
+            display: "inline-block",
             marginBottom: "10px",
           }}
         >
           📌 Watch Later
-        </p>
+        </span>
       )}
 
       <h2 style={{ marginBottom: "10px" }}>{movie.title}</h2>
-
-      <p style={{ marginBottom: "10px" }}>{movie.description}</p>
+      <p
+        style={{
+          color: "#f1c40f",
+          fontWeight: "bold",
+          marginBottom: "10px",
+        }}
+      >
+        ⭐ {movie.averageRating?.toFixed(1) || "0.0"}
+      </p>
+      <p style={{ marginBottom: "10px" }}>
+        {movie.description.length > 120
+          ? movie.description.substring(0, 120) + "..."
+          : movie.description}
+      </p>
 
       <p>
         <strong>Director:</strong> {movie.director}

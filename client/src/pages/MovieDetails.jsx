@@ -80,7 +80,7 @@ function MovieDetails() {
 
       console.log(response.data);
 
-      alert("Review Added Successfully");
+      alert("Review Saved Successfully");
 
       setRating("");
       setComment("");
@@ -152,7 +152,30 @@ function MovieDetails() {
       />
 
       <h1>{movie.title}</h1>
+      <div
+        style={{
+          backgroundColor: "#1e1e1e",
+          padding: "15px",
+          borderRadius: "10px",
+          marginTop: "15px",
+          marginBottom: "20px",
+          width: "250px",
+        }}
+      >
+        <h3>Overall Rating</h3>
 
+        <p
+          style={{
+            color: "#f1c40f",
+            fontSize: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          ⭐ {movie.averageRating?.toFixed(1) || "0.0"} / 5
+        </p>
+
+        <p>{reviews.length} Reviews</p>
+      </div>
       <p style={{ marginTop: "15px" }}>{movie.description}</p>
 
       <p style={{ marginTop: "15px" }}>
