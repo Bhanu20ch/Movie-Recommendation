@@ -12,18 +12,18 @@ import { useUser } from "@clerk/clerk-react";
 
 function Home() {
   const [movies, setMovies] = useState([]);
-
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusMap, setStatusMap] = useState({});
   const { user } = useUser();
 
   useEffect(() => {
     fetchMovies();
-  }, [user]);
+  }, [user, page]);
 
   const fetchMovies = async () => {
     try {
-      const data = await getMovies();
+      const data = await getMovies(page, 20);
 
       setMovies(data);
 
@@ -101,6 +101,18 @@ function Home() {
               status={statusMap[movie._id]}
             />
           ))}
+        </div>
+        <div style={{ textAlign: "center", marginTop: "30px" }}>
+          <button
+            onClick={() => setPage(page + 1)}
+            style={{
+              padding: "10px 20px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
+            Next Page
+          </button>
         </div>
       </div>
     </div>

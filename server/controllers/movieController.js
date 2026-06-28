@@ -14,7 +14,12 @@ const createMovie = async (req, res) => {
 
 const getMovies = async (req, res) => {
   try {
-    const movies = await Movie.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const skip = (page - 1) * limit;
+
+    const movies = await Movie.find().skip(skip).limit(limit);
 
     res.status(200).json(movies);
   } catch (error) {
