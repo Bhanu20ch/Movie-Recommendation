@@ -19,9 +19,16 @@ const getMovies = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
+    const totalMovies = await Movie.countDocuments();
+
     const movies = await Movie.find().skip(skip).limit(limit);
 
-    res.status(200).json(movies);
+    res.status(200).json({
+      movies,
+      totalMovies,
+      currentPage: page,
+      totalPages: Math.ceil(totalMovies / limit),
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -47,30 +54,40 @@ const getMovieById = async (req, res) => {
 };
 const searchMovies = async (req, res) => {
   try {
-    const query = req.query.q;
-    const synonymMap = {
-      science: "Sci-Fi",
-      sci: "Sci-Fi",
-      funny: "Comedy",
-      humor: "Comedy",
-      romantic: "Romance",
-      romance: "Romance",
-      actionful: "Action",
-      space: "Sci-Fi",
-    };
+    const { title, genre, language } = req.query;
 
-    const searchTerm = synonymMap[query.toLowerCase()] || query;
+    const query = {};
 
-    const movies = await Movie.find({
-      $or: [
-        { title: { $regex: searchTerm, $options: "i" } },
-        { genres: { $regex: searchTerm, $options: "i" } },
-        { language: { $regex: searchTerm, $options: "i" } },
-        { director: { $regex: searchTerm, $options: "i" } },
-      ],
+    if (title && title.trim() !== "") {
+      query.title = {
+        $regex: title,
+        $options: "i",
+      };
+    }
+
+    if (genre && genre !== "") {
+      query.genres = genre;
+    }
+
+    if (language && language !== "") {
+      query.language = language;
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const skip = (page - 1) * limit;
+
+    const totalMovies = await Movie.countDocuments(query);
+
+    const movies = await Movie.find(query).skip(skip).limit(limit);
+
+    res.status(200).json({
+      movies,
+      totalPages: Math.ceil(totalMovies / limit),
+      currentPage: page,
+      totalMovies,
     });
-
-    res.status(200).json(movies);
   } catch (error) {
     res.status(500).json({
       message: error.message,
